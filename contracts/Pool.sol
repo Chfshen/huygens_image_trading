@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract Pool {
-    
+
     struct Image {
         address owner;
         string imageHash;
@@ -14,7 +14,7 @@ contract Pool {
 
     address contractOwner;
 
-    Image[] public images;
+    string[] public imageHashes;
 
     constructor () {
         contractOwner = msg.sender;
@@ -30,8 +30,8 @@ contract Pool {
         theImage.owner = owner;
         theImage.price = price;
         theImage.forSale = forSale;
-        images.push(theImage);
         imageMap[h] = theImage;
+        imageHashes.push(h);
     }
 
     function getImage(string memory h) public view returns (Image memory) {
@@ -39,8 +39,17 @@ contract Pool {
     }
 
     function changeOwner(string memory h, address newOwner) public {
-        Image memory theImage = getImage(h);
-        theImage.owner = newOwner;
+        imageMap[h].owner = newOwner;
+    }
+
+    function getAllImages() public view returns (Image[] memory) {
+        uint256 length = imageHashes.length;
+        Image[] memory ret = new Image[](length);
+        for (uint256 i = 0; i < imageHashes.length; i++) {
+            Image memory image = imageMap[imageHashes[i]];
+            ret[i] = image;
+        }
+        return ret;
     }
 
 }
