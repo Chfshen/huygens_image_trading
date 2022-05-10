@@ -10,8 +10,9 @@ contract Token is Ownable, ERC20 {
 
     }
     
-    function mint(uint256 amount) public onlyOwner {
-        _mint(_msgSender(), amount);
+    function mint(address receiver, uint256 amount) public onlyOwner returns (bool){
+        _mint(receiver, amount);
+        return true;
     }
 
     function decimals() public pure override returns (uint8) {
