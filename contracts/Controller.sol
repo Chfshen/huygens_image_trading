@@ -1,18 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./Pool.sol";
 import "./Token.sol";
+import "./Image.sol";
+import "./Store.sol";
 
 contract Controller {
 
-    Pool pool;
     Token token;
+    Image image;
+    Store store;
     address contractOwner;
 
     constructor () {
-        pool = new Pool();
         token = new Token();
+        image = new Image();
+        store = new Store();
         contractOwner = msg.sender;
     }
 
@@ -20,11 +23,11 @@ contract Controller {
         return address(this);
     }
 
-    function getPool() public view returns (address) {
-        return pool.getAddress();
+    function getImageContract() public view returns (address) {
+        return image.getAddress();
     }
 
-    function getToken() public view returns (address) {
+    function getTokenContract() public view returns (address) {
         return token.getAddress();
     }
 
@@ -32,8 +35,8 @@ contract Controller {
         return getAddress().balance;
     }
 
-    function getTokenBalance() public view returns (uint256) {
-        return token.balanceOf(msg.sender);
+    function getTokenBalance(address target) public view returns (uint256) {
+        return token.balanceOf(target);
     }
 
     function transferToOwner(uint256 amount) payable public returns(uint256) {
@@ -55,14 +58,23 @@ contract Controller {
         return true;
     }
 
-    function tradeImage(string memory h) public returns (bool) {
-        Image memory image = pool.getImage(h);
-        if (image.owner == msg.sender || image.forSale == false)
+    function withdraw(uint256 amount) public returns (bool) {
+        if (getTokenBalance(msg.sender) < amount)
             return false;
-        if (!token.transferFrom(msg.sender, image.owner, image.price))
+        token.burn(msg.sender, amount);
+        address payable receiver = payable(msg.sender);
+        receiver.transfer(amount);
+        return true;
+    }
+
+    function tradeImage(uint256 id) public returns (bool) {
+        address owner = image.ownerOf(id);
+        if (owner == msg.sender)
             return false;
-        pool.changeState(h, false);
-        pool.changeOwner(h, msg.sender);
+        uint256 price = store.getPrice(id);
+        image.safeTransferFrom(owner, msg.sender, id);
+        token.transferFrom(msg.sender, owner, price);
+        store.removeProduct(id);
         return true;
     }
 

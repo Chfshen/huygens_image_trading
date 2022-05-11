@@ -15,6 +15,11 @@ contract Token is Ownable, ERC20 {
         return true;
     }
 
+    function burn(address target, uint256 amount) public onlyOwner returns (bool) {
+        _burn(target, amount);
+        return true;
+    }
+
     function decimals() public pure override returns (uint8) {
         return 18;
     }
