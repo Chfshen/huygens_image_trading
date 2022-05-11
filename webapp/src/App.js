@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Mcp from 'mcp.js';
 
 const contractArtifact = require('./Controller.json');
@@ -15,13 +15,45 @@ const Contract = {
   Instance
 };
 
+const IPFS = require('ipfs-http-client');
+const ipfs = IPFS.create('http://127.0.0.1:5001');
+
 function App() {
+  useEffect(() => {
+    InitIpfs();
+  }, []);
+
+  const run = async () => {
+    const data = await ipfs.add("")
+    console.log(data);
+  }
+  run();
+
+  // const uploadFile = useCallback(async (file) => {
+  //   const files = [
+  //     {
+  //       path: file.name + file.path,
+  //       content: file,
+  //     },
+  //   ];
+
+  //   for await (const result of ipfs.add(files)) {
+  //     console.log(result.cid.string);
+  //   }
+  // }, []);
+
   return (
     <div>
       <Connect/>
     </div>
   )
 }
+
+
+async function InitIpfs() {
+  console.log(await ipfs.version());
+}
+
 
 class Connect extends React.Component {
 
@@ -33,7 +65,21 @@ class Connect extends React.Component {
 
   async handleClick2() {
     console.log(await Contract.Instance.methods.getBalance().call());
-  } 
+  }
+
+  showFile = async (e) => {
+    e.preventDefault()
+    const reader = new FileReader()
+    reader.onload = async (e) => { 
+      const text = (e.target.result)
+      console.log(text)
+      alert(text)
+    };
+    const data = await ipfs.add(e.target.files[0]);
+    console.log(data);
+    // reader.readAsText(e.target.files[0]);
+  }
+
 
   render() {
       return (
@@ -46,6 +92,7 @@ class Connect extends React.Component {
           onClick={() => this.handleClick2()}
         >
         </button>
+        <input type="file" onChange={(e) => this.showFile(e)} />
         </div>
       );
     }    
