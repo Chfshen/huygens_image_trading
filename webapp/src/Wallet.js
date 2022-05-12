@@ -67,7 +67,7 @@ class Wallet extends React.Component {
             this.loadBlance();
             return (
                 <div>
-                    Loading...
+                    <div className="spinner-border spinner-border-sm" role="status"/>
                 </div>
             )
         }

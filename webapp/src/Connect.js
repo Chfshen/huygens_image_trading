@@ -42,10 +42,12 @@ class Connect extends React.Component {
     }
 
     handleSubmit() {
+        let pw = this.state.password;
+        console.log(pw);
         this.props.setState({
-            password: this.state.password,
+            password: pw,
         });
-        alert("Password set: ", this.state.password);
+        alert("Password set: "+pw+"\nPlease make sure your password is correct before proceeding!");
     }
 
     render() {

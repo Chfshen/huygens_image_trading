@@ -28,7 +28,8 @@ class Shop extends React.Component {
             imageId: null,
             price: null,
             urlLoading: null,
-            urls: []
+            urls: [],
+            search: '',
         };
         this.setState = this.setState.bind(this);
     }
@@ -104,22 +105,29 @@ class Shop extends React.Component {
         this.setState({
             loading: true
         })
-        await Contract.Image.imageInstance.methods.approve(Contract.Controller.controllerContract, this.state.imageId).sendBlock({
-            from: address,
-            password: this.props.password,
-            amount: new BigNumber('0').toString(),
-            gas_price: '20000000000',
-            gas: '2000000',
-        });
-        await Contract.Controller.controllerInstance.methods.startSell(parseInt(this.state.imageId), parseInt(this.state.price)).sendBlock({
-            from: address,
-            password: this.props.password,
-            amount: new BigNumber('0').toString(),
-            gas_price: '20000000000',
-            gas: '2000000',
-        });
+        let owner = await Contract.Image.imageInstance.methods.ownerOf(this.state.imageId).call();
+        console.log(owner);
+        if (owner !== address)
+            alert("You can only sell images owned by you!");
+        else {            
+            await Contract.Image.imageInstance.methods.approve(Contract.Controller.controllerContract, this.state.imageId).sendBlock({
+                from: address,
+                password: this.props.password,
+                amount: new BigNumber('0').toString(),
+                gas_price: '20000000000',
+                gas: '2000000',
+            });
+            await Contract.Controller.controllerInstance.methods.startSell(parseInt(this.state.imageId), parseInt(this.state.price)).sendBlock({
+                from: address,
+                password: this.props.password,
+                amount: new BigNumber('0').toString(),
+                gas_price: '20000000000',
+                gas: '2000000',
+            });
+        }
         this.setState({
-            page: 'shop'
+            page: 'shop',
+            loading: true,
         })
     }
 
@@ -151,6 +159,8 @@ class Shop extends React.Component {
                         </div>
                         <div>
                         {this.state.item[index][1].toString()}
+                        </div>
+                        <div className="spinner-border" role="status">
                         </div>
                     </div>
                 );
@@ -305,7 +315,26 @@ class Shop extends React.Component {
         
         this.setState({
             page: 'shop',
+            loading: true,
         });
+    }
+
+    searchInput(event) {
+        event.preventDefault()
+        this.setState({
+            search: event.target.value,
+        })
+    }
+
+    async searchSubmit() {
+        let searchId = new BigNumber(this.state.search).toString();
+        if (searchId === "NaN")
+            alert("Image ID must a number!");
+        else if(await Contract.Image.imageInstance.methods.exists(this.state.search).call()) {
+            alert("Owner: "+ await Contract.Image.imageInstance.methods.ownerOf(this.state.search).call());
+        }
+        else
+            alert("No such Image!");
     }
 
 
@@ -323,6 +352,11 @@ class Shop extends React.Component {
                     <div id='menu' className='row'>
                         <div className='col-9'>
                             Title
+                        </div>
+                        <div>
+                            Search Image Ownership:
+                            <input id='amount' type='text' onChange={(e) => this.searchInput(e)}></input>
+                            <button id='submit' className='btn btn-primary' onClick={() => this.searchSubmit()}>Submit</button>
                         </div>
                         <div className='col-3'>
                             <button id='upload' className='btn btn-primary' onClick={() => this.upload()}>Upload</button>
