@@ -1,6 +1,7 @@
 import React from "react";
 import BigNumber from 'bignumber.js';
-import Contract from './Contract'
+import Contract from './Contract';
+import Wallet from './Wallet';
 
 Contract.McpFunc.request.status().then(function (res) {
     console.log('MCP Status:', res);
@@ -11,7 +12,6 @@ Contract.McpFunc.request.status().then(function (res) {
 const IPFS = require('ipfs-http-client');
 const ipfs = IPFS.create('http://127.0.0.1:5001');
 
-const password = "";
 
 
 
@@ -30,6 +30,7 @@ class Shop extends React.Component {
             urlLoading: null,
             urls: []
         };
+        this.setState = this.setState.bind(this);
     }
 
     async getProducts() {
@@ -44,7 +45,6 @@ class Shop extends React.Component {
             urlLoading: loadingArray
         });
 
-        
         console.log(this.state.amount)
     }
 
@@ -54,9 +54,10 @@ class Shop extends React.Component {
         })
     }
 
-    buy() {
+    buy(i) {
         this.setState({
-            page: 'buy'
+            page: 'buy',
+            buyingIndex: i,
         })
     }
 
@@ -66,12 +67,24 @@ class Shop extends React.Component {
         })
     }
 
+    deposit() {
+        this.setState({
+            page: 'deposit'
+        })
+    }
+
+    withdraw() {
+        this.setState({
+            page: 'withdraw'
+        })
+    }
+
     async submitUpload() {
         let address = window['aleereum'].account
         console.log(address)
         const id = await Contract.Image.imageInstance.methods.addImage(address, this.state.url).sendBlock({
             from: address,
-            password: password,
+            password: this.props.password,
             amount: new BigNumber('0').toString(),
             gas_price: '20000000000',
             gas: '2000000',
@@ -93,14 +106,14 @@ class Shop extends React.Component {
         })
         await Contract.Image.imageInstance.methods.approve(Contract.Controller.controllerContract, this.state.imageId).sendBlock({
             from: address,
-            password: password,
+            password: this.props.password,
             amount: new BigNumber('0').toString(),
             gas_price: '20000000000',
             gas: '2000000',
         });
         await Contract.Controller.controllerInstance.methods.startSell(parseInt(this.state.imageId), parseInt(this.state.price)).sendBlock({
             from: address,
-            password: password,
+            password: this.props.password,
             amount: new BigNumber('0').toString(),
             gas_price: '20000000000',
             gas: '2000000',
@@ -164,30 +177,30 @@ class Shop extends React.Component {
         return (
             <div>
                 <div className='row'>
-                    <div className='item col-3' onClick={() => this.buy()}>
+                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex)}>
                         {this.showItem(this.state.currentIndex)}
                     </div>
-                    <div className='item col-3' onClick={() => this.buy()}>
+                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 1)}>
                         {this.showItem(this.state.currentIndex + 1)}
                     </div>
-                    <div className='item col-3' onClick={() => this.buy()}>
+                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 2)}>
                         {this.showItem(this.state.currentIndex + 2)}
                     </div>
-                    <div className='item col-3' onClick={() => this.buy()}>
+                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 3)}>
                         {this.showItem(this.state.currentIndex + 3)}
                     </div>
                 </div>
                 <div className='row'>
-                    <div className='item col-3' onClick={() => this.buy()}>
+                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 4)}>
                         {this.showItem(this.state.currentIndex + 4)}
                     </div>
-                    <div className='item col-3' onClick={() => this.buy()}>
+                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 5)}>
                         {this.showItem(this.state.currentIndex + 5)}
                     </div>
-                    <div className='item col-3' onClick={() => this.buy()}>
+                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 6)}>
                         {this.showItem(this.state.currentIndex + 6)}
                     </div>
-                    <div className='item col-3' onClick={() => this.buy()}>
+                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 7)}>
                         {this.showItem(this.state.currentIndex + 7)}
                     </div>
                 </div>
@@ -269,12 +282,39 @@ class Shop extends React.Component {
         })
     }
 
+    async buyImage(index) {
+        console.log(this.state.item[index]);
+
+        let address = window['aleereum'].account;
+
+        await Contract.Token.tokenInstance.methods.approve(Contract.Controller.controllerContract, this.state.item[index][1].toString()).sendBlock({
+            from: address,
+            password: this.props.password,
+            amount: new BigNumber('0').toString(),
+            gas_price: '20000000000',
+            gas: '2000000',
+        });
+
+        await Contract.Controller.controllerInstance.methods.tradeImage(this.state.item[index][0].toString()).sendBlock({
+            from: address,
+            password: this.props.password,
+            amount: new BigNumber('0').toString(),
+            gas_price: '20000000000',
+            gas: '2000000',   
+        });
+        
+        this.setState({
+            page: 'shop',
+        });
+    }
+
+
     render() {
         if (this.state.page === 'shop') {
             if (this.state.loading) {
                 this.getProducts();
                 return (
-                    <div></div>
+                    <div>Loading...</div>
                 )
             }
             else
@@ -287,6 +327,8 @@ class Shop extends React.Component {
                         <div className='col-3'>
                             <button id='upload' className='btn btn-primary' onClick={() => this.upload()}>Upload</button>
                             <button id='sell' className='btn btn-primary' onClick={() => this.sell()}>Sell</button>
+                            <button id='deposit' className='btn btn-primary' onClick={() => this.deposit()}>Deposit</button>
+                            <button id='withdraw' className='btn btn-primary' onClick={() => this.withdraw()}>Withdraw</button>
                         </div>
                     </div>
                     {this.showItems()}
@@ -325,15 +367,18 @@ class Shop extends React.Component {
         } else if (this.state.page === 'buy') {
             return (
                 <div>
-                    <div>
-                        Image Id:
-                    </div>
-                    <div>
-                        Price:
-                    </div>
-                    <button id='buy' className='btn btn-primary'>Buy</button>
+                    {this.showItem(this.state.buyingIndex)}
+                    <button id='buy' className='btn btn-primary' onClick={() => this.buyImage(this.state.buyingIndex)}>Buy</button>
                     <button id='backShop' className='btn btn-primary' onClick={() => this.backShop()}>Continue Shopping</button>
                 </div>
+            )
+        } else if (this.state.page === 'deposit') {
+            return (
+                <Wallet type='deposit' parentSetState={this.setState} password={this.props.password}/>
+            )
+        } else if (this.state.page === 'withdraw') {
+            return (
+                <Wallet type='withdraw' parentSetState={this.setState} password={this.props.password}/>
             )
         }
     }

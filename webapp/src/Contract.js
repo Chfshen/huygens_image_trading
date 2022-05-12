@@ -8,6 +8,7 @@ const tokenContract = "0x32aAA0136DFc453f8CAB354a33534d3F9442210D";
 const storeArtifact = require('./Store.json');
 const imageArtifact = require('./Image.json');
 const controllerArtifact = require('./Controller.json');
+const tokenArtifact = require('./Token.json');
 
 const options = {
     host: "18.182.45.18",
@@ -43,11 +44,21 @@ const Image = {
     imageInstance
 };
 
+const tokenInstance = new McpFunc.Contract(
+    tokenArtifact.abi,
+    tokenContract
+);
+const Token = {
+    tokenContract,
+    tokenInstance
+};
+
 
 const Contract = {
     Controller,
     Store,
     Image,
+    Token,
     McpFunc,
 };
 

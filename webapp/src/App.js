@@ -3,6 +3,8 @@ import React, {useEffect} from 'react';
 import Connect from "./Connect";
 import Shop from "./Shop";
 
+const password = "";
+
 function App() {
   useEffect(() => {
   }, []);
@@ -34,7 +36,7 @@ class Page extends React.Component {
         } else if (this.state.page === 'shop') {
             return (
                 <div>
-                    <Shop setState={this.setState}/>
+                    <Shop setState={this.setState} password={password}/>
                 </div>
             )
         }
