@@ -4,7 +4,8 @@ class Connect extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: ''
+            message: '',
+            password: '',
         };
     }
 
@@ -33,6 +34,20 @@ class Connect extends React.Component {
         }
     }
 
+    handleInput(event) {
+        event.preventDefault();
+        this.setState({
+            password: event.target.value
+        });
+    }
+
+    handleSubmit() {
+        this.props.setState({
+            password: this.state.password,
+        });
+        alert("Password set: ", this.state.password);
+    }
+
     render() {
         return (
             <div>
@@ -45,6 +60,11 @@ class Connect extends React.Component {
                             Ale
                         </button>
                         <div className='warning'>{this.state.message}</div>
+                    </div>
+                    <div>
+                        Password:
+                        <input id='amount' type='text' onChange={(e) => this.handleInput(e)}></input>
+                        <button id='submit' className='btn btn-primary' onClick={() => this.handleSubmit()}>Submit</button>
                     </div>
                 </div>
                 <div className='row'>

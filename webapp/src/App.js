@@ -3,7 +3,6 @@ import React, {useEffect} from 'react';
 import Connect from "./Connect";
 import Shop from "./Shop";
 
-const password = "";
 
 function App() {
   useEffect(() => {
@@ -21,7 +20,8 @@ class Page extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: 'connect'
+            page: 'connect',
+            password: '',
         };
         this.setState = this.setState.bind(this)
     }
@@ -36,7 +36,7 @@ class Page extends React.Component {
         } else if (this.state.page === 'shop') {
             return (
                 <div>
-                    <Shop setState={this.setState} password={password}/>
+                    <Shop setState={this.setState} password={this.state.password}/>
                 </div>
             )
         }
