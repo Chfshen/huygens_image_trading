@@ -36,3 +36,54 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  background-color: lightblue;
+}
+
+.right {
+  float: right;
+  margin-right: 200px;
+}
+
+#goShop {
+  margin-top: 150px;
+}
+
+.center {
+  text-align: center;
+}
+
+#homeTitle {
+  padding-top: 200px;
+  padding-bottom: 200px;
+  font-size: 120px;
+}
+
+.warning {
+  color: red;
+  font-size: 30px;
+  height: 30px
+}
+
+#menu {
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+
+.item {
+  height: 300px;
+}
+
+#back {
+  float: right;
+  margin-right: 50px;
+}
+
+#next {
+  margin-left: 50px;
+}
+
+.image {
+  width: 200px;
+}

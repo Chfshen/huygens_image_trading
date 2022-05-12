@@ -31,9 +31,15 @@ contract Controller {
         return token.getAddress();
     }
 
+    function getStoreContract() public view returns (address) {
+        return store.getAddress();
+    }
+
     function getBalance() public view returns (uint256) {
         return getAddress().balance;
     }
+
+    //Token Operations
 
     function getTokenBalance(address target) public view returns (uint256) {
         return token.balanceOf(target);
@@ -67,7 +73,9 @@ contract Controller {
         return true;
     }
 
-    function tradeImage(uint256 id) public returns (bool) {
+    //Store Operations
+
+    function tradeImage(uint256 id) payable public returns (bool) {
         address owner = image.ownerOf(id);
         if (owner == msg.sender)
             return false;
@@ -75,6 +83,17 @@ contract Controller {
         image.safeTransferFrom(owner, msg.sender, id);
         token.transferFrom(msg.sender, owner, price);
         store.removeProduct(id);
+        return true;
+    }
+
+    function startSell(uint256 id, uint256 price) public returns (bool) {
+        if (!image.exists(id))
+            return false;
+        if (image.ownerOf(id) != msg.sender)
+            return false;
+        if (image.getApproved(id) != address(this))
+            return false;
+        store.addProduct(id, price);
         return true;
     }
 

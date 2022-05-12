@@ -26,5 +26,9 @@ contract Image is Ownable, ERC721URIStorage{
         return newImageId;
     }
 
+    function exists(uint256 id) public view returns (bool){
+        return _exists(id);
+    }
+
 
 }

@@ -61,13 +61,15 @@ contract Store {
     }
 
     function removeProduct(uint256 id) public {
-        if (contractOwner != msg.sender)
+        if (contractOwner != msg.sender || !productMap[id].forSale)
             return;
         uint256 index = productMap[id].index;
         productMap[id].forSale = false;
-        productIds[index] = productIds[productIds.length - 1];
+        if (index != productIds.length - 1) {
+            productIds[index] = productIds[productIds.length - 1];
+            productMap[productIds[index]].index = index;
+        }
         productIds.pop();
-        productMap[productIds[index]].index = index;
     }
 
 }
