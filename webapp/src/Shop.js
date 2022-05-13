@@ -379,7 +379,7 @@ class Shop extends React.Component {
                 <div>
                     <div id='menu' className='row'>
                         <div className='col-4'>
-                            Title
+                            NFT Market
                         </div>
                         <div className='col-5'>
                             Search Image Ownership:

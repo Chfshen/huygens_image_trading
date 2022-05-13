@@ -55,7 +55,7 @@ class Connect extends React.Component {
             <div>
                 <div className='center'>
                     <div id='homeTitle'>
-                        Title
+                        NFT Market
                     </div>
                     <div>
                         <button id='connectAle' className='btn btn-primary' onClick={() => this.connectAle()}>Connect
