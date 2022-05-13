@@ -14,6 +14,8 @@ contract Image is Ownable, ERC721URIStorage{
     constructor () ERC721("Image", "IMG") {
     }
 
+    event addImageEvent(address creator, uint256 id);
+
     function getAddress() public view returns (address) {
         return address(this);
     }
@@ -23,6 +25,7 @@ contract Image is Ownable, ERC721URIStorage{
         _mint(creator, newImageId);
         _setTokenURI(newImageId, tokenURI);
         _tokenIds.increment();
+        emit addImageEvent(creator, newImageId);
         return newImageId;
     }
 

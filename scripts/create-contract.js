@@ -5,19 +5,13 @@ async function main() {
 
   const [owner] = await ethers.getSigners()
 
-  const Contract = await ethers.getContractFactory("CCNHandler")
+  const Contract = await ethers.getContractFactory("Controller")
   const contract = await Contract.deploy()
   await contract.deployed()
-  console.log("Contract deployed to:", contract.address)
-
-  // await contract.mint(50)
-  // console.log("Balance: ", await contract.balanceOf(owner.address))
-  // console.log("Your Compute Coin Balance: ", await contract.getWalletBalance())
-  console.log("Contract Balance: ", await contract.getContractBalance())
-  // console.log("target balance: ", await contract.transfertest(100))
-  // console.log("\n========after=======\n");
-  // console.log("Your Compute Coin Balance: ", await contract.getWalletBalance())
-  // console.log("Contract Balance: ", await contract.getContractBalance())
+  console.log("Controller deployed to:", contract.address)
+  console.log("Token deployed to:", await contract.getTokenContract())
+  console.log("Image deployed to:", await contract.getImageContract())
+  console.log("Store deployed to:", await contract.getStoreContract())
 }
 
 main()
