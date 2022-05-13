@@ -3,6 +3,9 @@ import BigNumber from 'bignumber.js';
 import Contract from './Contract';
 import Wallet from './Wallet';
 
+var Web3 = require('web3');
+var web3 = new Web3(Web3.givenProvider);
+
 Contract.McpFunc.request.status().then(function (res) {
     console.log('MCP Status:', res);
 }).catch(function(error){
@@ -83,7 +86,7 @@ class Shop extends React.Component {
     async submitUpload() {
         let address = window['aleereum'].account
         console.log(address)
-        const id = await Contract.Image.imageInstance.methods.addImage(address, this.state.url).sendBlock({
+        const receipt = await Contract.Image.imageInstance.methods.addImage(address, this.state.url).sendBlock({
             from: address,
             password: this.props.password,
             amount: new BigNumber('0').toString(),
@@ -94,7 +97,14 @@ class Shop extends React.Component {
                 console.log("Upload Error!", error);
             console.log("Upload txn hash: ", transactionHash);
         });
-        console.log("id: ", id);
+        let id = web3.eth.abi.decodeLog([{
+            type: 'address',
+            name: 'address'
+        },{
+            type: 'uint256',
+            name: 'id',
+        }], receipt.block.stable_content.log[1].data, receipt.block.stable_content.log[1].topics).id;
+        alert("Your Image ID is: "+id+"!!\nPlease write down your ID!!");
         this.setState({
             page: 'shop'
         })

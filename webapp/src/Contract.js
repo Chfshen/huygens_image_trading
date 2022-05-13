@@ -1,9 +1,9 @@
 import Mcp from 'mcp.js';
 
-const controllerContract = "0xd640D5a027aE25f061ec728C040388fE39D75045";
-const storeContract = "0x9D7b60317835b70C518aCdae93A21aEa8F36c715";
-const imageContract = "0xB7E7B1Ea17f43764A6d10A187a7AE7A072D1960e";
-const tokenContract = "0x32aAA0136DFc453f8CAB354a33534d3F9442210D";
+const controllerContract = "0xE26A8a3321050D947288E06918C97035aBE18625";
+const storeContract = "0x3B5870552d6D001017A6cD63A8D24d611fed11C0";
+const imageContract = "0xb80f4Bb488ec4d4e5327f80386aD5ee549A358Fe";
+const tokenContract = "0x2523D993726e92F18db816D2DEc85b8E66dc4A13";
 
 const storeArtifact = require('./Store.json');
 const imageArtifact = require('./Image.json');
