@@ -56,7 +56,7 @@ body {
 
 #homeTitle {
   padding-top: 200px;
-  padding-bottom: 200px;
+  padding-bottom: 150px;
   font-size: 120px;
 }
 
@@ -85,5 +85,18 @@ body {
 }
 
 .image {
-  width: 200px;
+  max-width: 200px;
+}
+
+.passwordInput{
+  padding-top: 50px;
+}
+
+.sellImage {
+  max-width: 800px;
+  max-height: 800px
+}
+
+.sellItem {
+  padding-bottom: 50px
 }

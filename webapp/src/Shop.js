@@ -156,9 +156,7 @@ class Shop extends React.Component {
         return {url, ret}
     }
 
-
-
-    showItem(index) {
+    sellItem(index) {
         if (index < this.state.amount) {
             if (this.state.urlLoading[index]) {
                 this.getUrl(index);
@@ -177,12 +175,48 @@ class Shop extends React.Component {
             }
             else {
                 return (
-                    <div>
+                    <div onClick={() => this.buy(index)}>
                         <div>
-                            {this.state.item[index][0].toString()}
+                            Id: {this.state.item[index][0].toString()}
                         </div>
                         <div>
-                        {this.state.item[index][1].toString()}
+                         Price: {this.state.item[index][1].toString()}
+                        </div>
+                        <div>
+                            <img className='sellImage' alt='' src={`${this.state.urls[index]}`}></img>
+                        </div>
+                    </div>
+                )
+            }
+        }
+    }
+
+
+    showItem(index) {
+        if (index < this.state.amount) {
+            if (this.state.urlLoading[index]) {
+                this.getUrl(index);
+                return (
+                    <div className='item col-3'>
+                        <div>
+                            Id: {this.state.item[index][0].toString()}
+                        </div>
+                        <div>
+                            Price: {this.state.item[index][1].toString()}
+                        </div>
+                        <div className="spinner-border" role="status">
+                        </div>
+                    </div>
+                );
+            }
+            else {
+                return (
+                    <div className='item col-3' onClick={() => this.buy(index)}>
+                        <div>
+                            Id: {this.state.item[index][0].toString()}
+                        </div>
+                        <div>
+                            Price: {this.state.item[index][1].toString()}
                         </div>
                         <div>
                             <img className='image' alt='' src={`${this.state.urls[index]}`}></img>
@@ -197,32 +231,16 @@ class Shop extends React.Component {
         return (
             <div>
                 <div className='row'>
-                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex)}>
-                        {this.showItem(this.state.currentIndex)}
-                    </div>
-                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 1)}>
-                        {this.showItem(this.state.currentIndex + 1)}
-                    </div>
-                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 2)}>
-                        {this.showItem(this.state.currentIndex + 2)}
-                    </div>
-                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 3)}>
-                        {this.showItem(this.state.currentIndex + 3)}
-                    </div>
+                    {this.showItem(this.state.currentIndex)}
+                    {this.showItem(this.state.currentIndex + 1)}
+                    {this.showItem(this.state.currentIndex + 2)}
+                    {this.showItem(this.state.currentIndex + 3)}
                 </div>
                 <div className='row'>
-                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 4)}>
-                        {this.showItem(this.state.currentIndex + 4)}
-                    </div>
-                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 5)}>
-                        {this.showItem(this.state.currentIndex + 5)}
-                    </div>
-                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 6)}>
-                        {this.showItem(this.state.currentIndex + 6)}
-                    </div>
-                    <div className='item col-3' onClick={() => this.buy(this.state.currentIndex + 7)}>
-                        {this.showItem(this.state.currentIndex + 7)}
-                    </div>
+                {this.showItem(this.state.currentIndex + 4)}
+                {this.showItem(this.state.currentIndex + 5)}
+                {this.showItem(this.state.currentIndex + 6)}
+                {this.showItem(this.state.currentIndex + 7)}
                 </div>
             </div>
         )
@@ -360,10 +378,10 @@ class Shop extends React.Component {
             return (
                 <div>
                     <div id='menu' className='row'>
-                        <div className='col-9'>
+                        <div className='col-4'>
                             Title
                         </div>
-                        <div>
+                        <div className='col-5'>
                             Search Image Ownership:
                             <input id='amount' type='text' onChange={(e) => this.searchInput(e)}></input>
                             <button id='submit' className='btn btn-primary' onClick={() => this.searchSubmit()}>Submit</button>
@@ -390,7 +408,8 @@ class Shop extends React.Component {
             return (
                 <div>
                     <input id='image' type='file' onChange={(e) => this.showFile(e)}></input>
-                    <button id='backShop' className='btn btn-primary' onClick={() => this.submitUpload()}>Upload</button>
+                    <button id='upload' className='btn btn-primary' onClick={() => this.submitUpload()}>Upload</button>
+                    <button className='backShop btn btn-primary' onClick={() => this.backShop()}>Continue Shopping</button>
                 </div>
             );
 
@@ -405,13 +424,14 @@ class Shop extends React.Component {
                         Price:
                         <input id='price' type='text' onChange={(e) => this.setPrice(e)}></input>
                     </div>
-                    <button id='backShop' className='btn btn-primary' onClick={() => this.submitSell()}>Sell</button>
+                    <button id='sell' className='btn btn-primary' onClick={() => this.submitSell()}>Sell</button>
+                    <button className='backShop btn btn-primary' onClick={() => this.backShop()}>Continue Shopping</button>
                 </div>
             );
         } else if (this.state.page === 'buy') {
             return (
                 <div>
-                    {this.showItem(this.state.buyingIndex)}
+                    {this.sellItem(this.state.buyingIndex)}
                     <button id='buy' className='btn btn-primary' onClick={() => this.buyImage(this.state.buyingIndex)}>Buy</button>
                     <button id='backShop' className='btn btn-primary' onClick={() => this.backShop()}>Continue Shopping</button>
                 </div>

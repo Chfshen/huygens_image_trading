@@ -63,7 +63,7 @@ class Connect extends React.Component {
                         </button>
                         <div className='warning'>{this.state.message}</div>
                     </div>
-                    <div>
+                    <div className='passwordInput'>
                         Password:
                         <input id='amount' type='text' onChange={(e) => this.handleInput(e)}></input>
                         <button id='submit' className='btn btn-primary' onClick={() => this.handleSubmit()}>Submit</button>
