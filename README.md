@@ -1,26 +1,61 @@
-### Install
-Go to the source directory and open terminal, please run this command.<br>
-> npm install
+# NFT Market
 
-### Config
-Rename .env.example to .env and open it, then fill the Huygens\_dev/huygens url and account's private key.<br> 
-> HUYGENS\_DEV\_URL=http://18.182.45.18:8765<br>
-> HUYGENS\_DEV\_PRIVATE\_KEY=Your Huygens_dev account's private key for deployment<br>
-> HUYGENS\_URL=http://13.212.177.203:8765<br>
-> HUYGENS\_PRIVATE\_KEY=Your Huygens account's private key for deployment<br>
+##### ----github repository for this project: 
+https://github.com/Chfshen/huygens_image_trading
 
-### Import the account to remote node and unlock it
-You should import account sepecified in HUYGENS\_DEV\_PRIVATE\_KEY to Huygens_dev remote node in http://18.182.45.18:8765 or you should import account specifed in HUYGENS\_PRIVATE\_KEY to Huygens remote node in http://13.212.177.203:8765. It depends on which environment you are using for debugging and developing. Otherwise, there is an `ProviderError: Invalid account` error.
+## Run tutorial
+##### 1. This project was developed with the following technologies:
+- Frontend:React+Javascript
+-- React-app
+- Backend:
+-- React
+-- Mcpjs
+-- Ipfs
+- Blockchain and smart contract: solidity
+-- Solidity
+-- Hardhat
+-- Huygens_dev and Huygens
 
-Read the Web3 compatibility section in CCN document for details.
-[https://computecoin-network.gitbook.io/computecoin-network/for-developers/smart-contract-developers/web3-compatibility](https://computecoin-network.gitbook.io/computecoin-network/for-developers/smart-contract-developers/web3-compatibility) <br>
+##### 2. How to use:
+To run the application you'll need:
+- Git
+- Node
+- Yarn or npm
+- Hardhat
+- Ipfs
 
-**This step will not be required after the CCN mainnet launch.**
+##### Test on huygens_dev
+We deploy our contracts on Huygens_dev. If you would like to make a test on Huygens_dev testnet, you need an Ale wallet account and follow [Computecoin-network instructions](https://github.com/computecoin-network/Huygens_smartcontract_101) to deploy on Huygens or Huygens_dev network.
+If you deploy successfully, please go to the “huygens_image_trading/webapp/src/Contract.js” and change the contract address to your new address for deployment.
 
-### Deploy and test the contract on Huygens_Dev
-> npx hardhat run scripts/contract.js --network Huygens_dev<br>
+##### Use our Dapp
 
-### Deploy and test the contract on Huygens
-> npx hardhat run scripts/contract.js --network Huygens<br>
+First, you need to get the repository:
+```sh
+git clone https://github.com/Chfshen/huygens_image_trading
+```
+Now got to the project folder:
+```sh
+cd huygens_image_trading/webapp
+# install packages required
+npm install
+```
+Then, open a new terminal to use ifps:
+```sh
+# open ipfs node locally with the address "locahost:5001"
+ipfs daemon
+```
+Run the project in the huygens_image_trading/webapp:
+```sh
+npm start
+```
+Then you can see the website of NFT market.
 
-Once deployed, you can see the Contract's address and it's balance on terminal.<br>
+
+
+
+
+## License
+
+MIT
+
